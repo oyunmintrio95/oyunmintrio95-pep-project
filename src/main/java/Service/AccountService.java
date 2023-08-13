@@ -29,5 +29,20 @@ public class AccountService {
         }
         
     }
+
+    //login account
+    public Account loginAccount(Account account){
+        Account actualAccount = accountDAO.getAccountByUsername(account.getUsername());
+        if(actualAccount != null){ //account with username exist.(right username)
+            if(accountDAO.getAccountByUsername(account.getUsername()).password.equals(account.getPassword())){//checks if the passwords are the same
+                //then return the account;
+                return actualAccount;
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+    }
     
 }
