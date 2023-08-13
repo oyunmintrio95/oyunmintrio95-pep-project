@@ -11,6 +11,28 @@ import Model.Account;
 import Util.ConnectionUtil;
 
 public class AccountDAO {
+    //retrieve an account from the Account table, identified by its account_id.
+    public Account getAccountByAccountId(int accountId){
+        Connection connection = ConnectionUtil.getConnection();
+        try{
+            String sql = "select * from account where account_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, accountId);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Account account = new Account(rs.getInt("account_id"),
+                                              rs.getString("username"),
+                                              rs.getString("password"));
+                return account;
+            }
+
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     //retrieve an account from the Account table, identified by its username.
     public Account getAccountByUsername(String username){
         Connection connection = ConnectionUtil.getConnection();

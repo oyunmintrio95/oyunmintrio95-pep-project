@@ -16,10 +16,13 @@ import Service.*;
  */
 public class SocialMediaController {
     AccountService accountService;
+    MessageService messageService;
 
     //Constructor for services
     public SocialMediaController(){
         accountService = new AccountService();
+        messageService = new MessageService();
+
     }
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
@@ -30,6 +33,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccountHandler);
         app.post("/login", this::loginAccountHandler);
+        app.post("/messages", this::postMessageHandler);
 
         return app;
     }
@@ -43,6 +47,18 @@ public class SocialMediaController {
             ctx.status(200);
         }else{
             ctx.status(401);
+        }
+    }
+
+    private void postMessageHandler(Context ctx) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message addMessage = messageService.addMessage(message);
+        if(addMessage!=null){
+            ctx.json(mapper.writeValueAsString(addMessage));
+            ctx.status(200);
+        }else{
+            ctx.status(400);
         }
     }
 
