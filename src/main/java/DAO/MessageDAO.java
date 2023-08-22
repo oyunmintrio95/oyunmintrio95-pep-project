@@ -58,17 +58,19 @@ public class MessageDAO {
         return messages;
     }
 
-    public void deleteMessageByMessageId(int message_id){
+    public int deleteMessageByMessageId(int message_id){
         Connection connection = ConnectionUtil.getConnection();
         try{
             String sql = "delete from message where message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, message_id);
 
-            preparedStatement.executeQuery();
+            // preparedStatement.executeQuery();
+            return preparedStatement.executeUpdate();
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        return 0;
     }
 
     public Message getAMessageByMessageId(int message_id){
@@ -93,7 +95,7 @@ public class MessageDAO {
         return null;
     }
 
-    public void updateMessage(int message_id, String messageText){
+    public int updateMessage(int message_id, String messageText){
         Connection connection = ConnectionUtil.getConnection();
         try{
             String sql = "update message set message_text = ? where message_id=?";
@@ -103,11 +105,13 @@ public class MessageDAO {
             preparedStatement.setInt(2, message_id);
             // preparedStatement.setLong(3, message.getTime_posted_epoch());
             // preparedStatement.setInt(4, message_id);
-            preparedStatement.executeUpdate();
+            return preparedStatement.executeUpdate();
+          
 
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        return 0;
     }
 
     public List<Message> getAllMessagesByAccountId(int account_id){
